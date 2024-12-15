@@ -1,4 +1,4 @@
-# Stream Manager App
+# GamersTag Stream App
 
 A Flutter application designed using Clean Architecture principles and GetX for state management. The app allows users to manage streaming links with precise UI adherence to provided designs.
 
@@ -47,14 +47,13 @@ A Flutter application designed using Clean Architecture principles and GetX for 
 - **Architecture:** Clean Architecture
 - **API Integration:** OpenGraph or Link Preview API for metadata fetching
 - **UI Assets:** SVG icons
-- **Animations:** Lottie
 
 ## Setup Instructions
 
 1. **Clone the Repository:**
    ```bash
    git clone <repository-link>
-   cd stream_manager
+   cd gamerstag_stream_app
    ```
 
 2. **Install Dependencies:**
