@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    fontFamily: 'Jost', // Set Jost as the global font family
+    fontFamily: 'Jost',
     primaryColor: Colors.red,
     scaffoldBackgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(
@@ -15,7 +15,7 @@ class AppTheme {
         color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        fontFamily: 'Jost', // Ensure font is used in AppBar
+        fontFamily: 'Jost', 
       ),
     ),
     textTheme: const TextTheme(

@@ -11,7 +11,6 @@ class StreamModel {
     required this.thumbnail,
   });
 
-  // Convert StreamModel to Map (useful for saving to a database or JSON)
   Map<String, dynamic> toMap() {
     return {
       'platform': platform,
@@ -21,7 +20,6 @@ class StreamModel {
     };
   }
 
-  // Create a StreamModel from a Map (useful for loading from a database or JSON)
   factory StreamModel.fromMap(Map<String, dynamic> map) {
     return StreamModel(
       platform: map['platform'] ?? '',

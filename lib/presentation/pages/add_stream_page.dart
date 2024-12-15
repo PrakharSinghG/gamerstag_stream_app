@@ -17,21 +17,19 @@ class AddStreamPage extends StatelessWidget {
     urlController.addListener(() async {
       final url = urlController.text.trim();
 
-      // Fetch metadata when the URL changes and is valid
       if (url.isNotEmpty && Uri.tryParse(url)?.hasAbsolutePath == true) {
         try {
           final metadata = await streamController.fetchMetadata(url);
-          thumbnailUrl.value = metadata.thumbnailUrl; // Update the thumbnail
+          thumbnailUrl.value = metadata.thumbnailUrl;
 
-          // Automatically set the title in the title input field
           titleController.text = metadata.title;
         } catch (e) {
-          thumbnailUrl.value = ''; // Reset thumbnail on error
-          titleController.clear(); // Clear the title input field on error
+          thumbnailUrl.value = '';
+          titleController.clear();
         }
       } else {
-        thumbnailUrl.value = ''; // Clear thumbnail if the URL is invalid
-        titleController.clear(); // Clear the title input field
+        thumbnailUrl.value = '';
+        titleController.clear();
       }
     });
 
@@ -51,7 +49,6 @@ class AddStreamPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Streaming Link Input
               _buildSectionLabel('Streaming / Video Link'),
               TextField(
                 controller: urlController,
@@ -60,7 +57,6 @@ class AddStreamPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Platform Dropdown
               _buildSectionLabel('Select your Streaming Platform'),
               Obx(
                 () => DropdownButtonFormField<String>(
@@ -84,7 +80,6 @@ class AddStreamPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Stream Title Input
               _buildSectionLabel('Video / Stream Title'),
               TextField(
                 controller: titleController,
@@ -93,7 +88,6 @@ class AddStreamPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Thumbnail Preview
               Obx(() {
                 if (thumbnailUrl.value.isNotEmpty) {
                   return Container(
@@ -120,7 +114,6 @@ class AddStreamPage extends StatelessWidget {
               }),
               const SizedBox(height: 24),
 
-              // Action Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -178,7 +171,6 @@ class AddStreamPage extends StatelessWidget {
   }
 
   Future<void> _handlePublish() async {
-    // Input Validation
     final url = urlController.text.trim();
     final title = titleController.text.trim();
     final platform = selectedPlatform.value;
@@ -195,10 +187,8 @@ class AddStreamPage extends StatelessWidget {
     }
 
     try {
-      // Fetch Metadata
       final metadata = await streamController.fetchMetadata(url);
 
-      // Add Stream to Controller
       streamController.addStream(
         platform: platform,
         title: title,
@@ -206,7 +196,6 @@ class AddStreamPage extends StatelessWidget {
         thumbnail: metadata.thumbnailUrl,
       );
 
-      // Show Success Message
       Get.snackbar(
         'Success',
         'Stream added successfully!',
@@ -215,7 +204,6 @@ class AddStreamPage extends StatelessWidget {
         colorText: Colors.white,
       );
 
-      // Navigate back after success
       await Future.delayed(const Duration(milliseconds: 1500));
       Navigator.of(Get.context!).pop();
     } catch (e) {

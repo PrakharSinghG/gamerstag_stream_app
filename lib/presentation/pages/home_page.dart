@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/stream_controller.dart';
 import '../widgets/stream_card.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatelessWidget {
   final StreamController controller = Get.put(StreamController());
+  final RxString searchQuery = ''.obs;
 
   HomePage({super.key});
 
@@ -22,14 +22,15 @@ class HomePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Search and Add Button Row
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                // Search Bar
                 Expanded(
                   child: TextField(
+                    onChanged: (value) {
+                      searchQuery.value = value; 
+                    },
                     decoration: InputDecoration(
                       hintText: "Search for Videos",
                       hintStyle: const TextStyle(color: Colors.white70),
@@ -47,7 +48,6 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
 
-                // Add Button
                 GestureDetector(
                   onTap: () {
                     Get.toNamed('/addStream');
@@ -74,10 +74,16 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Stream List
           Expanded(
             child: Obx(() {
-              if (controller.streams.isEmpty) {
+
+              final filteredStreams = controller.streams.where((stream) {
+                final query = searchQuery.value.toLowerCase();
+                return stream.title.toLowerCase().contains(query) ||
+                    stream.platform.toLowerCase().contains(query);
+              }).toList();
+
+              if (filteredStreams.isEmpty) {
                 return const Center(
                   child: Text(
                     'No live streams available.',
@@ -87,17 +93,18 @@ class HomePage extends StatelessWidget {
               }
 
               return ListView.builder(
-                itemCount: controller.streams.length,
+                itemCount: filteredStreams.length,
                 itemBuilder: (context, index) {
-                  final stream = controller.streams[index];
+                  final stream = filteredStreams[index];
                   return StreamCard(
                     thumbnailUrl: stream.thumbnail,
                     platformIconAsset: _getPlatformIconPath(stream.platform),
                     title: stream.title,
 
-                    // Delete Functionality
                     onDelete: () {
-                      controller.deleteStream(index);
+                      final originalIndex = controller.streams
+                          .indexOf(stream);
+                      controller.deleteStream(originalIndex);
                       Get.snackbar(
                         'Deleted',
                         'Stream "${stream.title}" was deleted successfully.',
@@ -107,7 +114,6 @@ class HomePage extends StatelessWidget {
                       );
                     },
 
-                    // Edit Functionality
                     onEdit: () {
                       Get.toNamed('/editStream', arguments: stream);
                     },
@@ -122,7 +128,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Helper to get platform icon URL
   String _getPlatformIconPath(String platform) {
     switch (platform.toLowerCase()) {
       case 'youtube':

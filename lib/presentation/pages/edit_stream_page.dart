@@ -13,7 +13,6 @@ class EditStreamPage extends StatelessWidget {
   final RxString thumbnailUrl = ''.obs;
 
   EditStreamPage({super.key}) {
-    // Initialize controllers and values with existing stream data
     urlController.text = stream.url;
     titleController.text = stream.title;
     selectedPlatform.value = stream.platform;
@@ -25,16 +24,15 @@ class EditStreamPage extends StatelessWidget {
     urlController.addListener(() async {
       final url = urlController.text.trim();
 
-      // Fetch metadata when the URL changes and is valid
       if (url.isNotEmpty && Uri.tryParse(url)?.hasAbsolutePath == true) {
         try {
           final metadata = await streamController.fetchMetadata(url);
-          thumbnailUrl.value = metadata.thumbnailUrl; // Update the thumbnail
+          thumbnailUrl.value = metadata.thumbnailUrl; 
         } catch (e) {
-          thumbnailUrl.value = ''; // Reset thumbnail on error
+          thumbnailUrl.value = '';
         }
       } else {
-        thumbnailUrl.value = ''; // Clear thumbnail if the URL is invalid
+        thumbnailUrl.value = ''; 
       }
     });
 
@@ -48,6 +46,12 @@ class EditStreamPage extends StatelessWidget {
           ),
           onPressed: () => Get.back(),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+            onPressed: () => _showDeleteConfirmationDialog(context),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -55,7 +59,6 @@ class EditStreamPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // URL Input
               _buildSectionLabel('Streaming / Video Link'),
               TextField(
                 controller: urlController,
@@ -64,7 +67,6 @@ class EditStreamPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Platform Dropdown
               _buildSectionLabel('Select your Streaming Platform'),
               Obx(
                 () => DropdownButtonFormField<String>(
@@ -88,7 +90,6 @@ class EditStreamPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Title Input
               _buildSectionLabel('Video / Stream Title'),
               TextField(
                 controller: titleController,
@@ -97,7 +98,6 @@ class EditStreamPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Thumbnail Preview
               Obx(() {
                 if (thumbnailUrl.value.isNotEmpty) {
                   return Container(
@@ -124,7 +124,6 @@ class EditStreamPage extends StatelessWidget {
               }),
               const SizedBox(height: 16),
 
-              // Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -193,14 +192,12 @@ class EditStreamPage extends StatelessWidget {
     }
 
     try {
-      // Fetch metadata (optional, only if the URL changed)
       String finalThumbnail = thumbnailUrl.value;
       if (url != stream.url) {
         final metadata = await streamController.fetchMetadata(url);
         finalThumbnail = metadata.thumbnailUrl;
       }
 
-      // Update the stream data
       streamController.updateStream(
         oldStream: stream,
         updatedStream: StreamModel(
@@ -211,7 +208,6 @@ class EditStreamPage extends StatelessWidget {
         ),
       );
 
-      // Success Notification
       Get.snackbar(
         'Success',
         'Stream updated successfully!',
@@ -221,7 +217,6 @@ class EditStreamPage extends StatelessWidget {
       );
       await Future.delayed(const Duration(milliseconds: 1500));
 
-      // Navigate back
       Navigator.of(Get.context!).pop();
     } catch (e) {
       Get.snackbar(
@@ -232,5 +227,72 @@ class EditStreamPage extends StatelessWidget {
         colorText: Colors.white,
       );
     }
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        contentPadding: EdgeInsets.zero,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Get.back(), 
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Delete Stream',
+                    style: TextStyle(color: Colors.red, fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Are you sure you want to delete the stream?',
+                    style: TextStyle(color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      final int index =
+                          streamController.streams.indexOf(stream);
+                      streamController.deleteStream(index);
+                      Get.snackbar(
+                        'Deleted',
+                        'Stream "${stream.title}" was deleted successfully.',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.redAccent,
+                        colorText: Colors.white,
+                      );
+                      Navigator.of(Get.context!).pop();
+                      Navigator.of(Get.context!)
+                          .pop();
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text('Confirm'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

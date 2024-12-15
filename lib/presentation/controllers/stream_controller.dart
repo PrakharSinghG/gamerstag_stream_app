@@ -2,7 +2,6 @@ import 'package:gamerstag_stream_app/data/datasources/metadata_datasource.dart';
 import 'package:gamerstag_stream_app/data/models/metadata_model.dart';
 import 'package:gamerstag_stream_app/data/models/stream_model.dart';
 import 'package:get/get.dart';
-import '../../domain/entities/metadata.dart';
 
 class StreamController extends GetxController {
   final RxList<StreamModel> streams = <StreamModel>[].obs;

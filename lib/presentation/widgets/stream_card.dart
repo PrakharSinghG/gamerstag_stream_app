@@ -11,7 +11,7 @@ class StreamCard extends StatelessWidget {
   const StreamCard({
     super.key,
     required this.thumbnailUrl,
-    required this.platformIconAsset, // Updated to take the SVG asset path
+    required this.platformIconAsset,
     required this.title,
     required this.onDelete,
     required this.onEdit,
@@ -23,10 +23,8 @@ class StreamCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          // Thumbnail Image with Overlayed Three-Dot Menu
           Stack(
             children: [
-              // Thumbnail Image
               Container(
                 height: 200,
                 decoration: BoxDecoration(
@@ -38,7 +36,6 @@ class StreamCard extends StatelessWidget {
                 ),
               ),
 
-              // Three-Dot Menu at Top-Right
               Positioned(
                 top: 8,
                 right: 8,
@@ -56,25 +53,22 @@ class StreamCard extends StatelessWidget {
                         value: 'Edit',
                         child: Text('Edit'),
                       ),
-                      const PopupMenuItem(
-                        value: 'Delete',
-                        child: Text('Delete'),
-                      ),
+                      
                     ];
                   },
                   icon: const Icon(
                     Icons.more_vert,
-                    color: Colors.white, // Three-dot color
+                    color: Colors.white,
                   ),
                 ),
               ),
             ],
           ),
 
-          // Bottom Row with Platform Icon and Title
+         
           Container(
             decoration: const BoxDecoration(
-              color: Color(0xFF1D3C34), // Green background color
+              color: Color(0xFF1D3C34), 
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(8),
                 bottomRight: Radius.circular(8),
@@ -84,18 +78,16 @@ class StreamCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Platform Icon
                 SizedBox(
                   width: 30,
                   height: 30,
                   child: SvgPicture.asset(
-                    platformIconAsset, // Load the SVG file
+                    platformIconAsset,
                     fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(width: 8),
 
-                // Title
                 Expanded(
                   child: Text(
                     title,
