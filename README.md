@@ -100,7 +100,7 @@ lib/
 
 ## Submission Details
 
-- **GitHub Repository:** [Link](<repository-link>)
+- **GitHub Repository:** [Link](<https://github.com/PrakharSinghG/gamerstag_stream_app?tab=readme-ov-file>)
 - **APK File:** [Download APK](<apk-link>)
 
 ## License
